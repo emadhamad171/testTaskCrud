@@ -1,22 +1,29 @@
-import classNames from 'classnames';
 import React from 'react';
+import Button from "../Button";
+import {Field} from "redux-form";
+import {renderField} from "../../utils/renderInput";
 
 
-const Modal = ({isOpen, overlayHandleClick, size, className, children}) => {
+const Form = ({fields, submitTitle, handleSubmit, invalid}) => {
+    const renderFields = () => {
+        return fields.map((field) => {
+            return (
+                <>
+                    <Field key={field.name} label={field.placeholder} name={field.name} component={renderField}/>
+                </>
+            )
+        })
+    }
     return (
         <>
-            {isOpen && (
-                <div className='modal-overlay' onClick={overlayHandleClick}>
-                    <div
-                        className={classNames('modal', size && `modal--${size}`, className)}
-                        onClick={e => e.stopPropagation()}
-                    >
-                        {children}
-                    </div>
-                </div>
-            )}
+            <form className='' onSubmit={handleSubmit}>
+                {renderFields()}
+                <Button
+                    disabled={!!invalid}
+                    title={submitTitle}/>
+            </form>
         </>
     );
 };
 
-export default Modal;
+export default Form;
